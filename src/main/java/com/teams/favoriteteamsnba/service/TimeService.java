@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -27,7 +28,9 @@ public class TimeService {
         ObjectMapper mapper = new ObjectMapper();
 
         for (int i = 1; i <= 2; i++) {
-            String result = restTemplate.getForObject(uri + "?page=" + i, String.class);
+            ResponseEntity<String> response = restTemplate.getForEntity(uri + "?page=" + i, String.class);
+            logger.info("Status code: " + ((ResponseEntity<?>) response).getStatusCode());
+            String result = response.getBody();
             try {
                 JsonNode root = mapper.readTree(result);
                 JsonNode data = root.path("data");
@@ -40,6 +43,9 @@ public class TimeService {
     }
 
     public List<Time> getAll() {
+        if (times.isEmpty()) {
+            throw new TimeNotFoundException("Nenhum time encontrado");
+        }
         return times;
     }
 
@@ -51,15 +57,23 @@ public class TimeService {
     }
 
     public List<Time> getByName(String name) {
-        return times.stream()
+        List<Time> result = times.stream()
                 .filter(time -> time.getName().toLowerCase().contains(name.toLowerCase()))
                 .collect(Collectors.toList());
+        if (result.isEmpty()) {
+            throw new TimeNotFoundException("Nenhum time encontrado com o nome " + name);
+        }
+        return result;
     }
 
     public List<Time> getByConference(String conference) {
-        return times.stream()
+        List<Time> result = times.stream()
                 .filter(time -> time.getConference().toLowerCase().contains(conference.toLowerCase()))
                 .collect(Collectors.toList());
+        if (result.isEmpty()) {
+            throw new TimeNotFoundException("Nenhum time encontrado na conferência " + conference);
+        }
+        return result;
     }
 
 }

@@ -11,5 +11,4 @@ public class TimeFavorito {
     private String apelido;
     private List<String> qualidadesApreciadas;
     private Time time;
-
 }
