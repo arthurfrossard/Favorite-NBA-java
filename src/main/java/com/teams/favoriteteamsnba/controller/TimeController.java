@@ -22,6 +22,7 @@ public class TimeController {
 
     @GetMapping
     public ResponseEntity<?> getTimes(@RequestParam(required = false) String name, @RequestParam(required = false) String conference) {
+        logger.info("Método getTimes de timeController acionado.");
         try {
             List<Time> times;
             if (name != null) {
@@ -31,19 +32,23 @@ public class TimeController {
             } else {
                 times = timeService.getAll();
             }
+            logger.info("Método getTimes de timeController OK.");
             return new ResponseEntity<>(times, HttpStatus.OK);
         } catch (TimeNotFoundException e) {
+            logger.error("Error método getTimes: " + new Erro(e.getMessage()));
             return new ResponseEntity<>(new Erro(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable int id){
-        logger.info("GET CLIENTE: " + id);
+        logger.info("Método getById de timeController acionado para o ID: " + id);
         try {
             Time time = timeService.getById(id);
+            logger.info("Método getById de timeController OK.");
             return new ResponseEntity<>(time, HttpStatus.OK);
         } catch (TimeNotFoundException e) {
+            logger.error("Error método getById TimeController: " + new Erro(e.getMessage()));
             return new ResponseEntity<>(new Erro(e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }

@@ -83,10 +83,10 @@ public class TimeFavoritoService {
         return timeFavorito;
     }
 
-    public TimeFavorito update(TimeFavorito timeFavorito) {
-        TimeFavorito existingTimeFavorito = getById(timeFavorito.getId());
+    public TimeFavorito update(long id, TimeFavorito timeFavorito) {
+        TimeFavorito existingTimeFavorito = getById(id);
         if (existingTimeFavorito == null) {
-            throw new TimeNotFoundException("TimeFavorito com id " + timeFavorito.getId() + " não encontrado");
+            throw new TimeNotFoundException("TimeFavorito com id " + id + " não encontrado");
         }
         existingTimeFavorito.setApelido(timeFavorito.getApelido());
         existingTimeFavorito.setQualidadesApreciadas(timeFavorito.getQualidadesApreciadas());
