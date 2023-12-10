@@ -17,6 +17,7 @@ import java.util.List;
 @RequestMapping("/times")
 public class TimeController {
     Logger logger = LoggerFactory.getLogger(TimeController.class);
+
     @Autowired
     TimeService timeService;
 
